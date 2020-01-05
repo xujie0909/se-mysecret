@@ -58,7 +58,7 @@ public class WeChatServiceImpl implements WeChatService {
 
             // 文本消息
             if (msgType.equals(WeChatMessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-                respContent = "亲，这是文本消息！http://xujie.vip/page/index";
+                respContent = "亲，这是文本消息！http://q94mmc.natappfree.cc/page/index";
                 textMessage.setContent(respContent);
                 respMessage = WeChatMessageUtil.textMessageToXml(textMessage);
             }

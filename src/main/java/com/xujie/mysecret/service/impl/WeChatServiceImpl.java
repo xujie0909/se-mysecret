@@ -12,12 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * @author xujie17
+ */
 @Slf4j
 public class WeChatServiceImpl implements WeChatService {
 
     @Override
     public String weChatHandle(HttpServletRequest request, HttpServletResponse response) {
-
 
         WeixinMessageInfo weixinMessageInfo = new WeixinMessageInfo();
 
@@ -50,7 +52,7 @@ public class WeChatServiceImpl implements WeChatService {
             TextMessage textMessage = new TextMessage();
             textMessage.setToUserName(fromUserName);
             textMessage.setFromUserName(toUserName);
-            textMessage.setCreateTime(new Date().getTime());
+            textMessage.setCreateTime(System.currentTimeMillis());
             textMessage.setMsgType(WeChatMessageUtil.RESP_MESSAGE_TYPE_TEXT);
             textMessage.setFuncFlag(0);
 
@@ -58,7 +60,7 @@ public class WeChatServiceImpl implements WeChatService {
 
             // 文本消息
             if (msgType.equals(WeChatMessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-                respContent = "亲，这是文本消息！http://q94mmc.natappfree.cc/page/index";
+                respContent = "亲，这是文本消息！http://hdj2fd.natappfree.cc/page/index";
                 textMessage.setContent(respContent);
                 respMessage = WeChatMessageUtil.textMessageToXml(textMessage);
             }

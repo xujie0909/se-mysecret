@@ -6,12 +6,17 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="#"/>
     <title>主页</title>
     <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript">
+
+    <script type="text/javascript" th:inline="javascript">
+
         $(function () {
-            alert("hello!");
+
+            var message = [[${result}]];
+            alert(message)
             var timestamp = Date.parse(new Date());
             wx.config({
                 debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -23,10 +28,10 @@
             });
 
             //获取地理位置
-            var latitude;
-            var longitude;
-            var speed;
-            var accuracy;
+            let latitude;
+            let longitude;
+            let speed;
+            let accuracy;
             wx.getLocation({
                 type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                 success: function (res) {
@@ -34,6 +39,7 @@
                     longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
                     speed = res.speed; // 速度，以米/每秒计
                     accuracy = res.accuracy; // 位置精度
+                    console.log("=====>>>" + JSON.stringify(res));
                 }
             });
             console.log("==longitude:" + longitude + "latitude:" + latitude + "speed:" + speed + "accuracy:" + accuracy);
@@ -41,7 +47,35 @@
             wx.ready(function () {
                 alert("hello!!!!!!init success!!!")
             });
+
+            getAccessToken();
         })
+
+        //生成签名
+        function getSignature() {
+            var timestamp = Date.parse(new Date());
+        }
+
+        //获取并保存凭据
+        function getAccessToken() {
+            var appid = 'wx1ac3362f8a49e7cc';
+            var appsecret = '373e5e95e6faaebd824949855b96703a';
+            alert("开始请求...")
+            $.ajax({
+                url: "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appid + "&secret=" + appsecret + "",
+                async: false,
+                dataType: 'jsonp',  // 请求方式为jsonp,解决跨域问题
+                crossDomain: true,
+                success: function (result) {
+                    alert("请求成功...")
+                    console.log(JSON.stringify(result));
+                    console.log(result.access_token);
+                    localStorage.setItem("access_token", result);
+                }
+            })
+        }
+
+
     </script>
 </head>
 <body>

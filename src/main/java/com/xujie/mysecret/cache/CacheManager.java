@@ -15,17 +15,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class CacheManager implements ApplicationListener<ContextRefreshedEvent> {
+public class CacheManager implements ApplicationListener<ContextRefreshedEvent>{
 
-    private static Cache<String, String> CACHE;
+    public static Cache<String, String> CACHE;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        CACHE = initCache();
-    }
-
-    public Cache<String, String> initCache() {
-        return CacheBuilder.newBuilder()
+        CACHE = CacheBuilder.newBuilder()
                 .maximumSize(1000)
                 //缓存保留2小时
                 .expireAfterWrite(7200, TimeUnit.SECONDS)

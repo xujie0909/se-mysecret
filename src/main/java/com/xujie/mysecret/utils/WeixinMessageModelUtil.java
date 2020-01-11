@@ -27,7 +27,7 @@ public class WeixinMessageModelUtil {
         NewsMessage newsMessage = new NewsMessage();
         newsMessage.setToUserName(weixinMessageInfo.getFromUserName());
         newsMessage.setFromUserName(weixinMessageInfo.getToUserName());
-        newsMessage.setCreateTime(new Date().getTime());
+        newsMessage.setCreateTime(System.currentTimeMillis());
         newsMessage.setMsgType(WeChatMessageUtil.RESP_MESSAGE_TYPE_NEWS);
         newsMessage.setFuncFlag(0);
 
@@ -77,7 +77,7 @@ public class WeixinMessageModelUtil {
         TextMessage textMessage = new TextMessage();
         textMessage.setToUserName(weixinMessageInfo.getFromUserName());
         textMessage.setFromUserName(weixinMessageInfo.getToUserName());
-        textMessage.setCreateTime(new Date().getTime());
+        textMessage.setCreateTime(System.currentTimeMillis());
         textMessage.setMsgType(WeChatMessageUtil.RESP_MESSAGE_TYPE_TEXT);
         textMessage.setFuncFlag(0);
         textMessage.setContent("系统出错啦，请稍后再试");

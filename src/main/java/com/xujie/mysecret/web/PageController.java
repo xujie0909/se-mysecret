@@ -36,13 +36,7 @@ public class PageController {
         }
 
 
-        //获取token
-        String tokenResult = HttpUtil.doGet(TOKENURL, new HashMap<String, String>(16) {{
-            put("grant_type", GRANTTYPE);
-            put("appid", Constant.APPID);
-            put("secret", APPSECRET);
-        }});
-        log.info("get token result is:{}", tokenResult);
+
 
 
         mv.addObject(TOKENRESULT, tokenResult);

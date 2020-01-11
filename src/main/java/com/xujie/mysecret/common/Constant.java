@@ -15,6 +15,7 @@ public class Constant {
      */
     public static final String TOKENURL = "https://api.weixin.qq.com/cgi-bin/token";
 
+    public static final String ACCESSTOKEN = "access_token";
 
 
 

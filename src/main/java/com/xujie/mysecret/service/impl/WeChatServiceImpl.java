@@ -1,22 +1,36 @@
 package com.xujie.mysecret.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.xujie.mysecret.cache.CacheContent;
+import com.xujie.mysecret.common.Constant;
 import com.xujie.mysecret.entity.WeixinMessageInfo;
 import com.xujie.mysecret.entity.message.TextMessage;
 import com.xujie.mysecret.service.WeChatService;
+import com.xujie.mysecret.utils.HttpUtil;
 import com.xujie.mysecret.utils.WeChatMessageUtil;
+import com.xujie.mysecret.utils.WechatConfig;
 import com.xujie.mysecret.utils.WeixinMessageModelUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
+import static com.xujie.mysecret.common.Constant.*;
 
 /**
  * @author xujie17
  */
 @Slf4j
 public class WeChatServiceImpl implements WeChatService {
+
+    private static final String PREFIX = "weichat_";
+
+    @Autowired
+    private CacheContent cacheContent;
 
     @Override
     public String weChatHandle(HttpServletRequest request, HttpServletResponse response) {
@@ -150,4 +164,18 @@ public class WeChatServiceImpl implements WeChatService {
         return respMessage;
 
     }
+
+    @Override
+    public String getJsapiTicket() {
+
+        String accessToken = cacheContent.get(PREFIX + ACCESSTOKEN);
+        String wechatAccessToken = WechatConfig.getWechatAccessToken();
+
+
+
+
+        return null;
+    }
+
+
 }

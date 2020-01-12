@@ -17,5 +17,5 @@ public interface ICache<K,V> {
      * @param k k
      * @return v
      */
-    V get(K k);
+    V get(K k) throws Exception;
 }

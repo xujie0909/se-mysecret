@@ -1,17 +1,15 @@
 package com.xujie.mysecret.cache;
 
-import com.google.common.cache.Cache;
+import com.xujie.mysecret.utils.WechatConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author xujie17
  */
 @Component
+@Slf4j
 public class CacheContent implements ICache<String,String> {
-
-    private Cache<String,String> cache;
 
     @Override
     public void save(String key, String value) {
@@ -19,8 +17,20 @@ public class CacheContent implements ICache<String,String> {
     }
 
     @Override
-    public String get(String key) {
-        //return CacheManager.CACHE.get(key,);
-        return null;
+    public String get(String key) throws Exception {
+
+        return CacheManager.CACHE.get(key, () -> {
+
+            log.info("当前缓存为空，获取数据并缓存...");
+
+            String accessToken = WechatConfig.getWechatAccessToken();
+            String ticket = WechatConfig.getTicket(accessToken);
+
+            log.info("ticket缓存成功:{}",ticket);
+            log.info("key缓存成功:{}",key);
+
+            return ticket;
+        });
+
     }
 }

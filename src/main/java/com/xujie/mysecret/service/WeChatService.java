@@ -2,6 +2,7 @@ package com.xujie.mysecret.service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 
 
 /**
@@ -21,7 +22,7 @@ public interface WeChatService {
      * 获取ticket
      * @return ticket
      */
-    String getJsapiTicket();
+    HashMap<String, String> getSignature(String url);
 
 
 }

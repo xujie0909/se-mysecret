@@ -6,15 +6,15 @@ import com.xujie.mysecret.common.Constant;
 import com.xujie.mysecret.entity.WeixinMessageInfo;
 import com.xujie.mysecret.entity.message.TextMessage;
 import com.xujie.mysecret.service.WeChatService;
-import com.xujie.mysecret.utils.HttpUtil;
-import com.xujie.mysecret.utils.WeChatMessageUtil;
-import com.xujie.mysecret.utils.WechatConfig;
-import com.xujie.mysecret.utils.WeixinMessageModelUtil;
+import com.xujie.mysecret.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.ServiceMode;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +25,16 @@ import static com.xujie.mysecret.common.Constant.*;
  * @author xujie17
  */
 @Slf4j
+@Service
 public class WeChatServiceImpl implements WeChatService {
 
     private static final String PREFIX = "weichat_";
 
-    @Autowired
-    private CacheContent cacheContent;
+    private final CacheContent cacheContent;
+
+    public WeChatServiceImpl(CacheContent cacheContent) {
+        this.cacheContent = cacheContent;
+    }
 
     @Override
     public String weChatHandle(HttpServletRequest request, HttpServletResponse response) {
@@ -74,7 +78,7 @@ public class WeChatServiceImpl implements WeChatService {
 
             // 文本消息
             if (msgType.equals(WeChatMessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-                respContent = "亲，这是文本消息！http://hdj2fd.natappfree.cc/page/index";
+                respContent = "亲，这是文本消息！" + TESTIP + "/page/index";
                 textMessage.setContent(respContent);
                 respMessage = WeChatMessageUtil.textMessageToXml(textMessage);
             }
@@ -166,15 +170,38 @@ public class WeChatServiceImpl implements WeChatService {
     }
 
     @Override
-    public String getJsapiTicket() {
+    public HashMap<String, String> getSignature(String url) {
 
-        String accessToken = cacheContent.get(PREFIX + ACCESSTOKEN);
-        String wechatAccessToken = WechatConfig.getWechatAccessToken();
+        HashMap<String, String> resultMap = new HashMap<>();
+        resultMap.put(APPIDNAME, APPIDVALUE);
 
+        String ticket = null;
+        SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddHHmmss");
+        String time = formater.format(new Date());
 
+        try {
+            log.info("当前线程名:{}", Thread.currentThread().getName());
+            ticket = cacheContent.get(PREFIX + TICKET + "_" + Thread.currentThread().getName() + "_" + time);
+        } catch (Exception e) {
+            log.error("get accessToken from cache error!", e);
+        }
 
+        log.info("获取的ticket值为:{}", ticket);
 
-        return null;
+        //随机字符串
+        String randomString = StringUtil.getRandomString(8);
+        resultMap.put(NONCESTR, randomString);
+
+        //时间戳
+        long timestamp = System.currentTimeMillis();
+        resultMap.put(TIMESTAMP, String.valueOf(timestamp));
+
+        String str = JSAPITICKET + "=" + ticket + "&" + NONCESTR + "=" + randomString + "&"
+                + TIMESTAMP + "=" + timestamp + "&" + URL + "=" + TESTIP + "/page/index";
+
+        resultMap.put(SIGNATURE, SHA1.encode(str));
+
+        return resultMap;
     }
 
 

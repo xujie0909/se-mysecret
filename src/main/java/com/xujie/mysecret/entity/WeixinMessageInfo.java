@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class WeixinMessageInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String fromUserName;           // 发送发微信账号
+    private String fromUserName;           // 发送方微信账号
 
     private String toUserName;             // 接收方微信账号
 

@@ -1,9 +1,11 @@
-package com.xujie.mysecret.web;
+package com.xujie.mysecret.web.wechat;
 
+import com.xujie.mysecret.service.WeChatService;
 import com.xujie.mysecret.service.impl.WeChatServiceImpl;
 import com.xujie.mysecret.utils.CheckUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,12 +16,16 @@ import java.io.PrintWriter;
 
 @Slf4j
 @RestController
-public class WeChatController {
+public class WcBaseController {
+
+    private final WeChatServiceImpl weChatService;
+
+    public WcBaseController(WeChatServiceImpl weChatService) {
+        this.weChatService = weChatService;
+    }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
     public String index(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        WeChatServiceImpl weChatService = new WeChatServiceImpl();
 
         log.info("----------------开始处理微信发过来的消息------------------");
         // 微信服务器POST消息时用的是UTF-8编码，在接收时也要用同样的编码，否则中文会乱码；
@@ -51,7 +57,5 @@ public class WeChatController {
             out.print(echostr);
         }
         out.close();
-        out = null;
-
     }
 }

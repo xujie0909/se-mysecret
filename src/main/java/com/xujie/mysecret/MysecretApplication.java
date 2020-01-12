@@ -12,7 +12,9 @@ public class MysecretApplication extends WebMvcConfigurationSupport {
 
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
             /*"classpath:/META-INF/resources/",*/
-            "classpath:/resources/static/js/common/*.js",
+            "classpath:/resources/static/js/bootstrap/css/*.css",
+            "classpath:/resources/static/js/bootstrap/js/*.js",
+            "classpath:/resources/static/js/bootstrap/fonts/*",
             "classpath:/static/"
            /* "classpath:/public/"*/
     };

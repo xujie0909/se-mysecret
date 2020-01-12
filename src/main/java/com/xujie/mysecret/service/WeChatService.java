@@ -25,4 +25,6 @@ public interface WeChatService {
     HashMap<String, String> getSignature(String url);
 
 
+
+
 }

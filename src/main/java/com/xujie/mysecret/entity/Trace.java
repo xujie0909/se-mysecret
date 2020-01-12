@@ -2,21 +2,19 @@ package com.xujie.mysecret.entity;
 
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
-@Table(name = "t_trace")
+@Entity(name = "t_trace")
 public class Trace implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String date;
+    private Date time;
 
     private String latitude;
 
@@ -25,6 +23,12 @@ public class Trace implements Serializable {
     private String locationDesc;
 
     private String speed;
+
+    private String action;
+
+    private String description;
+
+
 
 
 }

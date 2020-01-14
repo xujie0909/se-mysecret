@@ -34,6 +34,11 @@ public interface WeChatService {
      */
     WxResponse saveMarkInfo(HttpServletRequest request);
 
+    /**
+     * 创建自定义菜单
+     */
+    public void createMenu();
+
 
 
 

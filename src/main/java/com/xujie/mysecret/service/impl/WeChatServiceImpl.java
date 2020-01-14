@@ -2,6 +2,7 @@ package com.xujie.mysecret.service.impl;
 
 import com.sun.deploy.net.HttpResponse;
 import com.xujie.mysecret.cache.CacheContent;
+import com.xujie.mysecret.cache.CacheManager;
 import com.xujie.mysecret.dao.TraceDao;
 import com.xujie.mysecret.entity.LocationDTO;
 import com.xujie.mysecret.entity.Trace;
@@ -13,9 +14,11 @@ import com.xujie.mysecret.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.beans.Transient;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,7 +33,7 @@ import static com.xujie.mysecret.common.Constant.*;
 @Service
 public class WeChatServiceImpl implements WeChatService {
 
-    private static final String PREFIX = "weichat_";
+
 
     private final CacheContent cacheContent;
 
@@ -183,12 +186,12 @@ public class WeChatServiceImpl implements WeChatService {
 
         String ticket = null;
         SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddHHmmss");
-        String time = formater.format(new Date());
 
         try {
             ticket = cacheContent.get(PREFIX + TICKET);
         } catch (Exception e) {
             log.error("get accessToken from cache error!", e);
+            return null;
         }
 
         log.info("获取的ticket值为:{}", ticket);
@@ -223,6 +226,7 @@ public class WeChatServiceImpl implements WeChatService {
     }
 
     @Override
+    @Transactional
     public WxResponse saveMarkInfo(HttpServletRequest request) {
 
         WxResponse wxResponse = new WxResponse();
@@ -256,22 +260,37 @@ public class WeChatServiceImpl implements WeChatService {
             return wxResponse;
         }
 
-        LocationDTO locationDTO = getLocationDes(new LocationDTO(latitude, latitude, speed));
+        LocationDTO locationDTO = getLocationDes(new LocationDTO(latitude, longitude, speed));
 
         Trace trace = new Trace();
         trace.setLatitude(locationDTO.getLatitude());
         trace.setLongitude(locationDTO.getLongitude());
         trace.setAction(actionType);
         trace.setSpeed(speed);
-        log.info("需要存储的东西:{}",trace);
+        trace.setLocationDesc(locationDTO.getDesc());
+        trace.setTime(new Date());
+        log.info("需要存储的东西:{}", trace);
         Trace saveTrace = traceDao.save(trace);
-        log.info("存储成功!{}",saveTrace);
 
-        //WxResponse wxResponse = new WxResponse();
+        log.info("存储成功!{}", saveTrace);
         wxResponse.setStatusCode(HttpServletResponse.SC_OK);
         wxResponse.setStatusDes("存储成功!");
         wxResponse.setResResult(locationDTO.getDesc());
-
         return wxResponse;
+    }
+
+    @Override
+    public void createMenu() {
+
+        try {
+            String accessToken = cacheContent.get(PREFIX + ACCESSTOKEN);
+        } catch (Exception e) {
+            log.error("get accessToken from cache error!", e);
+            return ;
+        }
+
+        //https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN
+        String param = "";
+        //HttpUtil.doPost("https://api.weixin.qq.com/cgi-bin/menu/create",)
     }
 }

@@ -1,22 +1,21 @@
 package com.xujie.mysecret.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.sun.deploy.net.HttpResponse;
 import com.xujie.mysecret.cache.CacheContent;
-import com.xujie.mysecret.common.Constant;
+import com.xujie.mysecret.dao.TraceDao;
+import com.xujie.mysecret.entity.LocationDTO;
+import com.xujie.mysecret.entity.Trace;
 import com.xujie.mysecret.entity.WeixinMessageInfo;
+import com.xujie.mysecret.entity.WxResponse;
 import com.xujie.mysecret.entity.message.TextMessage;
 import com.xujie.mysecret.service.WeChatService;
 import com.xujie.mysecret.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.swing.StringUIClientPropertyKey;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.ServiceMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,9 +34,13 @@ public class WeChatServiceImpl implements WeChatService {
 
     private final CacheContent cacheContent;
 
-    public WeChatServiceImpl(CacheContent cacheContent) {
+    private final TraceDao traceDao;
+
+    public WeChatServiceImpl(CacheContent cacheContent, TraceDao traceDao) {
         this.cacheContent = cacheContent;
+        this.traceDao = traceDao;
     }
+
 
     @Override
     public String weChatHandle(HttpServletRequest request, HttpServletResponse response) {
@@ -206,8 +209,23 @@ public class WeChatServiceImpl implements WeChatService {
         return resultMap;
     }
 
+    public LocationDTO getLocationDes(LocationDTO locationDTO) {
+        //重试两次
+        int count = 0;
+        while (count < LOCATIONMAXTIME) {
+            LocationUtil.getLocationInfo(locationDTO);
+            if (StringUtils.isNotBlank(locationDTO.getDesc())) {
+                break;
+            }
+            count++;
+        }
+        return locationDTO;
+    }
+
     @Override
-    public String getLocationDes(HttpServletRequest request) {
+    public WxResponse saveMarkInfo(HttpServletRequest request) {
+
+        WxResponse wxResponse = new WxResponse();
 
         /*
          * 微信返回的位置报文
@@ -224,34 +242,36 @@ public class WeChatServiceImpl implements WeChatService {
          */
 
         //经度
-        String longitude = request.getParameter("longitude");
+        String longitude = request.getParameter(LONGITUDE);
         //维度
-        String latitude = request.getParameter("latitude");
+        String latitude = request.getParameter(LATITUDE);
+        //速度
+        String speed = request.getParameter(SPEED);
+        //标记类型
+        String actionType = request.getParameter(ACTIONTYPE);
 
-        if(StringUtils.isBlank(longitude) || StringUtils.isBlank(latitude)){
-            return "未获取到经度和维度！";
+        if (StringUtils.isBlank(longitude) || StringUtils.isBlank(latitude)) {
+            wxResponse.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+            wxResponse.setStatusDes("未获取到经度和维度！");
+            return wxResponse;
         }
 
-        //重试两次
-        int count = 0;
-        while(count < LOCATIONMAXTIME){
-            String result = HttpUtil.doGet(ANALYSISLOCATIONIP,new HashMap<String,String>(3){{
-                put(LAT,latitude);
-                put(LON,longitude);
-                put(OUTPUT,JSONTYPE);
-            }});
+        LocationDTO locationDTO = getLocationDes(new LocationDTO(latitude, latitude, speed));
 
-            log.info("获取的地址解析响应为:{}",result);
+        Trace trace = new Trace();
+        trace.setLatitude(locationDTO.getLatitude());
+        trace.setLongitude(locationDTO.getLongitude());
+        trace.setAction(actionType);
+        trace.setSpeed(speed);
+        log.info("需要存储的东西:{}",trace);
+        Trace saveTrace = traceDao.save(trace);
+        log.info("存储成功!{}",saveTrace);
 
-            JSONObject resultLocation = JSON.parseObject(result);
-            Integer errcode = (Integer)resultLocation.get(ERRCODE);
-            String address = (String)resultLocation.get(ADDRESS);
-            if(ZERO == errcode){
-                log.info("位置解析为:{}",address);
-                return address;
-            }
-            count ++;
-        }
-        return "位置解析失败，重试次数为:"+count;
+        //WxResponse wxResponse = new WxResponse();
+        wxResponse.setStatusCode(HttpServletResponse.SC_OK);
+        wxResponse.setStatusDes("存储成功!");
+        wxResponse.setResResult(locationDTO.getDesc());
+
+        return wxResponse;
     }
 }

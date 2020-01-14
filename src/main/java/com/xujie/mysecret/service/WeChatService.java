@@ -1,5 +1,7 @@
 package com.xujie.mysecret.service;
 
+import com.xujie.mysecret.entity.WxResponse;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -24,11 +26,13 @@ public interface WeChatService {
      */
     HashMap<String, String> getSignature(String url);
 
+
     /**
-     * 获取解析之后的位置
-     * @return
+     * 微信响应
+     * @param request 请求
+     * @return 响应
      */
-    String getLocationDes(HttpServletRequest request);
+    WxResponse saveMarkInfo(HttpServletRequest request);
 
 
 

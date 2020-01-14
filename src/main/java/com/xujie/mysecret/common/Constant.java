@@ -50,8 +50,13 @@ public class Constant {
     public static final String ADDRESS = "address";
     public static final String ERRCODE = "errcode";
     public static final String LAT = "lat";
+    public static final String LONGITUDE = "longitude";
+    public static final String LATITUDE = "latitude";
+    public static final String SPEED = "speed";
     public static final String LON = "lon";
     public static final String OUTPUT = "output";
+    public static final String ACTIONTYPE = "actiontype";
+
 
     /**
      * 其他常量

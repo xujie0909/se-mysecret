@@ -20,7 +20,7 @@
 
 <div>
     <a id="mark" href="javascript:" style="font-size: 90px" class="weui-btn_cell weui-btn_cell-default"
-       onclick="getLocation()">MARK</a>
+       onclick="markTodo('eat')">MARK</a>
 </div>
 
 <div class="weui-tab__panel">
@@ -41,8 +41,6 @@
 <script type="text/javascript" th:src="@{/js/jquery-weui.min.js}"></script>
 
 <script type="text/javascript" th:inline="javascript">
-
-    var latitude, longitude, speed, accuracy;
 
     $(function () {
         init();
@@ -65,7 +63,7 @@
         });
     }
 
-    function getLocation() {
+    function markTodo(actionType) {
         //获取x地理位置
         wx.ready(function () {
             alert("验证成功！！开始获取地理位置！");
@@ -73,30 +71,37 @@
                 type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                 success: function (res) {
                     alert("获取的位置为>:" + JSON.stringify(res));
-                    /*latitude = res.latitude;
-                    longitude = res.longitude;
-                    speed = res.speed;
-                    accuracy = res.accuracy;*/
-                    transLocationMsg(res);
+                    transLocationMsg(res,actionType);
                 }
             });
         });
     }
 
-    function transLocationMsg(msg) {
+    function transLocationMsg(msg,actionType) {
         $.ajax({
-            url: '/wc/location',
+            url: '/wx/mark',
             method: 'get',
             async: false,
-            dataType:"text",
+            dataType:"json",
             data: {
                 "latitude": msg.latitude,
                 "longitude": msg.longitude,
-                "speed": msg.speed
+                "speed": msg.speed,
+                "actionType":actionType
             },
             success: function (res) {
-                $("#locationText").empty();
-                $("#locationText").append("<b>定位位置为:" + JSON.stringify(res) + "</b>")
+
+                var text = $("#locationText");
+
+                text.empty();
+
+                if(res.statusCode === 500){
+                    text.append("<b>响应结果:" + JSON.stringify(res.statusDes) + "</b>");
+                }
+
+                else if(res.statusCode === 200){
+                    text.append("<b>定位位置为:" + JSON.stringify(res.resResult) + "</b>");
+                }
             },
             error: function (e) {
                 alert(JSON.stringify(e));

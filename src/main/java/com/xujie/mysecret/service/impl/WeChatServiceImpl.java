@@ -1,5 +1,6 @@
 package com.xujie.mysecret.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xujie.mysecret.cache.CacheContent;
 import com.xujie.mysecret.common.Constant;
@@ -8,8 +9,10 @@ import com.xujie.mysecret.entity.message.TextMessage;
 import com.xujie.mysecret.service.WeChatService;
 import com.xujie.mysecret.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.swing.StringUIClientPropertyKey;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -180,8 +183,7 @@ public class WeChatServiceImpl implements WeChatService {
         String time = formater.format(new Date());
 
         try {
-            log.info("当前线程名:{}", Thread.currentThread().getName());
-            ticket = cacheContent.get(PREFIX + TICKET + "_" + Thread.currentThread().getName() + "_" + time);
+            ticket = cacheContent.get(PREFIX + TICKET);
         } catch (Exception e) {
             log.error("get accessToken from cache error!", e);
         }
@@ -204,5 +206,52 @@ public class WeChatServiceImpl implements WeChatService {
         return resultMap;
     }
 
+    @Override
+    public String getLocationDes(HttpServletRequest request) {
 
+        /*
+         * 微信返回的位置报文
+         *{
+         * 	"indoor_building_id": [""],
+         * 	"latitude": ["40.073566"],
+         * 	"accuracy": ["30.0"],
+         * 	"indoor_building_floor": ["1000"],
+         * 	"indoor_building_type": ["-1"],
+         * 	"speed": ["0.0"],
+         * 	"longitude": ["116.35183"],
+         * 	"errMsg": ["getLocation:ok"]
+         * }
+         */
+
+        //经度
+        String longitude = request.getParameter("longitude");
+        //维度
+        String latitude = request.getParameter("latitude");
+
+        if(StringUtils.isBlank(longitude) || StringUtils.isBlank(latitude)){
+            return "未获取到经度和维度！";
+        }
+
+        //重试两次
+        int count = 0;
+        while(count < LOCATIONMAXTIME){
+            String result = HttpUtil.doGet(ANALYSISLOCATIONIP,new HashMap<String,String>(3){{
+                put(LAT,latitude);
+                put(LON,longitude);
+                put(OUTPUT,JSONTYPE);
+            }});
+
+            log.info("获取的地址解析响应为:{}",result);
+
+            JSONObject resultLocation = JSON.parseObject(result);
+            Integer errcode = (Integer)resultLocation.get(ERRCODE);
+            String address = (String)resultLocation.get(ADDRESS);
+            if(ZERO == errcode){
+                log.info("位置解析为:{}",address);
+                return address;
+            }
+            count ++;
+        }
+        return "位置解析失败，重试次数为:"+count;
+    }
 }

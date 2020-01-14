@@ -6,17 +6,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * @author xujie17
+ */
 @SpringBootApplication
 public class MysecretApplication extends WebMvcConfigurationSupport {
 
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
-            /*"classpath:/META-INF/resources/",*/
-            "classpath:/resources/static/js/bootstrap/css/*.css",
-            "classpath:/resources/static/js/bootstrap/js/*.js",
-            "classpath:/resources/static/js/bootstrap/fonts/*",
             "classpath:/static/"
-           /* "classpath:/public/"*/
     };
 
     @Override

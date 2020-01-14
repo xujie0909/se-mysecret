@@ -22,5 +22,12 @@ spring:
   thymeleaf:
     cache: false
     suffix: .html
+    encoding: UTF-8
   resources:
-    static-locations: classpath:/templates/
+    static-locations: classpath:/static/
+  mvc:
+    static-path-pattern: /static/**
+
+logging:
+  level:
+    root: info

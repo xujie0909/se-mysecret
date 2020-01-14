@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Expires" content="0">
@@ -7,80 +8,100 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
     <link rel="shortcut icon" href="#"/>
-    <title>主页</title>
-    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
-    <link th:href="@{/bootstrap/css/bootstrap-theme.css}" rel="stylesheet" type="text/css" />
+    <title>2.3随便写的标题</title>
 
-    <!--jquery-->
-    <script type="text/javascript" th:src="@{/common/js/jquery-3.4.1.min.js}"></script>
-    <!--bootstrap-->
-    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.js}"></script>
-    <!--weixin-->
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
+    <!--weiUI CSS-->
+    <link th:href="@{/css/weui.min.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/jquery-weui.min.css}" rel="stylesheet" type="text/css"/>
 
-    <script type="text/javascript" th:inline="javascript">
-
-        $(function(){
-
-            var signature = [[${signature}]];
-            var appid = [[${appid}]];
-            var timestamp = [[${timestamp}]];
-            var noncestr = [[${noncestr}]];
-            //alert(signature + ":" + appid + ":" + timestamp + ":" + noncestr)
-
-            //微信配置
-            wx.config({
-                debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-                appId: appid, // 必填，公众号的唯一标识
-                timestamp: timestamp, // 必填，生成签名的时间戳
-                nonceStr: noncestr, // 必填，生成签名的随机串
-                signature: signature,// 必填，签名
-                jsApiList: ['getLocation', 'openLocation'] // 必填，需要使用的JS接口列表
-            });
-
-            //获取地理位置
-            //var latitude,longitude,speed,accuracy ;
-
-            var locationMsg;
-            wx.ready(function () {
-                alert("验证成功！！开始获取地理位置！");
-                wx.getLocation({
-                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-                    success: function (res) {
-                        alert("获取到了信息...啊啊啊：" + JSON.stringify(res))
-                        transLocation(res);
-                        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                        var speed = res.speed; // 速度，以米/每秒计
-                        var accuracy = res.accuracy; // 位置精度
-                    }
-                });
-            });
-        });
-
-        function transLocation(msg){
-            alert("0.3获取到了信息...msg is:" + JSON.stringify(msg));
-            $.ajax({
-                url:'/wc/location',
-                method:'get',
-                async:false,
-                data:msg,
-                success:function(){
-                    alert("数据传送成功！")
-                },
-                error:function(e){
-                    alert("error :" + JSON.stringify(e));
-                }
-
-            })
-        }
-
-    </script>
 
 </head>
-<body>
-hello! this is a new html page!
-<input class="btn btn-default" type="button" value="大按钮">
+<body ontouchstart style="position: fixed;top: 0;left: 0;width: 100%;height: 100% ">
+
+<div>
+    <a id="mark" href="javascript:" style="font-size: 90px" class="weui-btn_cell weui-btn_cell-default"
+       onclick="getLocation()">MARK</a>
+</div>
+
+<div class="weui-tab__panel">
+    <div class="weui-tab__content" style="display: block;">
+        <div id="form">
+            <div class="weui-cells__title" id="locationText"></div>
+        </div>
+    </div>
+</div>
 
 </body>
+<!--jquery-->
+<script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<!--weixin SDK-->
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" charset="utf-8"></script>
+<!--weixinUI JS-->
+<script type="text/javascript" th:src="@{/js/weui.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery-weui.min.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+
+    var latitude, longitude, speed, accuracy;
+
+    $(function () {
+        init();
+    });
+
+    //初始化配置
+    function init() {
+        var signature = [[${signature}]];
+        var appid = [[${appid}]];
+        var timestamp = [[${timestamp}]];
+        var noncestr = [[${noncestr}]];
+        //微信配置
+        wx.config({
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: appid, // 必填，公众号的唯一标识
+            timestamp: timestamp, // 必填，生成签名的时间戳
+            nonceStr: noncestr, // 必填，生成签名的随机串
+            signature: signature,// 必填，签名
+            jsApiList: ['getLocation', 'openLocation'] // 必填，需要使用的JS接口列表
+        });
+    }
+
+    function getLocation() {
+        //获取x地理位置
+        wx.ready(function () {
+            alert("验证成功！！开始获取地理位置！");
+            wx.getLocation({
+                type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                success: function (res) {
+                    alert("获取的位置为>:" + JSON.stringify(res));
+                    /*latitude = res.latitude;
+                    longitude = res.longitude;
+                    speed = res.speed;
+                    accuracy = res.accuracy;*/
+                    transLocationMsg(res);
+                }
+            });
+        });
+    }
+
+    function transLocationMsg(msg) {
+        $.ajax({
+            url: '/wc/location',
+            method: 'get',
+            async: false,
+            dataType:"text",
+            data: {
+                "latitude": msg.latitude,
+                "longitude": msg.longitude,
+                "speed": msg.speed
+            },
+            success: function (res) {
+                $("#locationText").empty();
+                $("#locationText").append("<b>定位位置为:" + JSON.stringify(res) + "</b>")
+            },
+            error: function (e) {
+                alert(JSON.stringify(e));
+            }
+        })
+    }
+</script>
 </html>

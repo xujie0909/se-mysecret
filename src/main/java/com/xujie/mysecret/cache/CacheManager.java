@@ -35,10 +35,10 @@ public class CacheManager implements CommandLineRunner {
         CACHE = CacheBuilder.newBuilder()
                 .maximumSize(1000)
                 //缓存保留2小时
-                .expireAfterWrite(7200, TimeUnit.SECONDS)
+                .expireAfterWrite(3600, TimeUnit.SECONDS)
                 //缓存移除监听器
                 .removalListener((RemovalListener<String, String>) notify -> {
-                    log.info("缓存项被删除：{}>=<{},删除原因：{}", notify.getKey(), notify.getValue(), notify.getCause().name());
+                    log.info("缓存项被删除,key:{},value为:{},删除原因为:{}", notify.getKey(), notify.getValue(), notify.getCause().name());
                 })
                 .build();
     }

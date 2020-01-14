@@ -24,6 +24,12 @@ public interface WeChatService {
      */
     HashMap<String, String> getSignature(String url);
 
+    /**
+     * 获取解析之后的位置
+     * @return
+     */
+    String getLocationDes(HttpServletRequest request);
+
 
 
 

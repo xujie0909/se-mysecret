@@ -5,15 +5,15 @@ package com.xujie.mysecret.common;
  */
 public class Constant {
 
-    public static final String TESTIP = "http://jipkxw.natappfree.cc";
+    public static final String TESTIP = "http://vbj5kb.natappfree.cc";
     /**
      * 地图服务最大重试次数
      */
     public static final Integer LOCATIONMAXTIME = 2;
 
-    public static final String APPIDVALUE = "wx82b9743ebd1dbfc3";
+    public static final String APPIDVALUE = "wx1ac3362f8a49e7cc";
     public static final String APPIDNAME = "appid";
-    public static final String APPSECRET = "eacdeb28dfa7433467676ce665b1ff72";
+    public static final String APPSECRET = "373e5e95e6faaebd824949855b96703a";
     public static final String GRANTTYPE = "client_credential";
 
     /**
@@ -24,6 +24,10 @@ public class Constant {
      * 微信h5SDK获取ticket地址
      */
     public static final String TICKETURL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
+    /**
+     *
+     */
+    public static final String CREATEMENU = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=";
 
     /**
      * 经纬度地址解析地址
@@ -56,13 +60,14 @@ public class Constant {
     public static final String OUTPUT = "output";
     public static final String ACTIONTYPE = "actiontype";
 
-
     /**
      * 其他常量
      */
     public static final int ZERO = 0;
     public static final String JSONTYPE = "json";
     public static final String PREFIX = "weichat_";
+    public static final String PLACEHOLDER_URL = "[URL]";
+
 
 
 }

@@ -37,7 +37,7 @@ public interface WeChatService {
     /**
      * 创建自定义菜单
      */
-    public void createMenu();
+    Integer createMenu();
 
 
 

@@ -1,5 +1,7 @@
 package com.xujie.mysecret.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.deploy.net.HttpResponse;
 import com.xujie.mysecret.cache.CacheContent;
 import com.xujie.mysecret.cache.CacheManager;
@@ -32,7 +34,6 @@ import static com.xujie.mysecret.common.Constant.*;
 @Slf4j
 @Service
 public class WeChatServiceImpl implements WeChatService {
-
 
 
     private final CacheContent cacheContent;
@@ -184,8 +185,7 @@ public class WeChatServiceImpl implements WeChatService {
         HashMap<String, String> resultMap = new HashMap<>();
         resultMap.put(APPIDNAME, APPIDVALUE);
 
-        String ticket = null;
-        SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddHHmmss");
+        String ticket;
 
         try {
             ticket = cacheContent.get(PREFIX + TICKET);
@@ -280,17 +280,31 @@ public class WeChatServiceImpl implements WeChatService {
     }
 
     @Override
-    public void createMenu() {
-
+    public Integer createMenu() {
+        String accessToken;
         try {
-            String accessToken = cacheContent.get(PREFIX + ACCESSTOKEN);
+            accessToken = cacheContent.get(PREFIX + ACCESSTOKEN);
+            log.info("从缓存获取的accessToken为:{}", accessToken);
         } catch (Exception e) {
             log.error("get accessToken from cache error!", e);
-            return ;
+            return null;
         }
 
         //https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN
-        String param = "";
-        //HttpUtil.doPost("https://api.weixin.qq.com/cgi-bin/menu/create",)
+
+        String menuConfig = FileUtil.readJsonFile(System.getProperty("user.dir") + "/src/main/resources/config/wxMenu.json");
+        if (menuConfig == null) {
+            log.error("create menu failed!");
+            return null;
+        }
+        String trueMenuConfig = menuConfig.replace(PLACEHOLDER_URL, TESTIP + "/page/index");
+        String result = HttpUtil.doPost(CREATEMENU + accessToken, trueMenuConfig);
+        JSONObject resultObj = JSONObject.parseObject(result);
+        Integer errCode = (Integer) resultObj.get(ERRCODE);
+        log.info("create menu result is:{}", result);
+        if (0 == errCode) {
+            return errCode;
+        }
+        return null;
     }
 }

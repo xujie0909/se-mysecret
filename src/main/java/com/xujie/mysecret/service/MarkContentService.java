@@ -1,6 +1,6 @@
 package com.xujie.mysecret.service;
 
-import com.xujie.mysecret.entity.MarkContent;
+import com.xujie.mysecret.entity.mark.MarkContent;
 
 import java.util.List;
 

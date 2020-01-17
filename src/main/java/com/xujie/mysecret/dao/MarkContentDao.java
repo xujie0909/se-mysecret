@@ -1,6 +1,6 @@
 package com.xujie.mysecret.dao;
 
-import com.xujie.mysecret.entity.MarkContent;
+import com.xujie.mysecret.entity.mark.MarkContent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

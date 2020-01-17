@@ -1,7 +1,7 @@
 package com.xujie.mysecret.service.impl;
 
 import com.xujie.mysecret.dao.MarkContentDao;
-import com.xujie.mysecret.entity.MarkContent;
+import com.xujie.mysecret.entity.mark.MarkContent;
 import com.xujie.mysecret.service.MarkContentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

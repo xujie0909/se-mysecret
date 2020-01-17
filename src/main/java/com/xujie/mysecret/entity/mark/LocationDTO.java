@@ -1,4 +1,4 @@
-package com.xujie.mysecret.entity;
+package com.xujie.mysecret.entity.mark;
 
 import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.AllArgsConstructor;

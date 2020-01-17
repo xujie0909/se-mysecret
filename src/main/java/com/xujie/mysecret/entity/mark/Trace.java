@@ -1,4 +1,4 @@
-package com.xujie.mysecret.entity;
+package com.xujie.mysecret.entity.mark;
 
 import lombok.Data;
 import lombok.ToString;
@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Entity(name = "t_trace")
+@Entity
 @ToString
 public class Trace implements Serializable {
 

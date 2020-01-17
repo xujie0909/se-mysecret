@@ -1,4 +1,4 @@
-package com.xujie.mysecret.entity.message;
+package com.xujie.mysecret.entity.wechat.message;
 
 import lombok.Data;
 

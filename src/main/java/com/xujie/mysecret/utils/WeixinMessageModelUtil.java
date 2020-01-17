@@ -1,13 +1,12 @@
 package com.xujie.mysecret.utils;
 
-import com.xujie.mysecret.entity.Article;
-import com.xujie.mysecret.entity.WeixinMessageInfo;
-import com.xujie.mysecret.entity.message.NewsMessage;
-import com.xujie.mysecret.entity.message.TextMessage;
+import com.xujie.mysecret.entity.wechat.Article;
+import com.xujie.mysecret.entity.wechat.WeixinMessageInfo;
+import com.xujie.mysecret.entity.wechat.message.NewsMessage;
+import com.xujie.mysecret.entity.wechat.message.TextMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j

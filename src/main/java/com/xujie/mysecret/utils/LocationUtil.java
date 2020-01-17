@@ -2,7 +2,7 @@ package com.xujie.mysecret.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.xujie.mysecret.entity.LocationDTO;
+import com.xujie.mysecret.entity.mark.LocationDTO;
 
 import java.util.HashMap;
 

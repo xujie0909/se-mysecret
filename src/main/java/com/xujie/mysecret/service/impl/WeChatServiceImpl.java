@@ -1,16 +1,13 @@
 package com.xujie.mysecret.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.deploy.net.HttpResponse;
 import com.xujie.mysecret.cache.CacheContent;
-import com.xujie.mysecret.cache.CacheManager;
 import com.xujie.mysecret.dao.TraceDao;
-import com.xujie.mysecret.entity.LocationDTO;
-import com.xujie.mysecret.entity.Trace;
-import com.xujie.mysecret.entity.WeixinMessageInfo;
+import com.xujie.mysecret.entity.mark.LocationDTO;
+import com.xujie.mysecret.entity.mark.Trace;
+import com.xujie.mysecret.entity.wechat.WeixinMessageInfo;
 import com.xujie.mysecret.entity.WxResponse;
-import com.xujie.mysecret.entity.message.TextMessage;
+import com.xujie.mysecret.entity.wechat.message.TextMessage;
 import com.xujie.mysecret.service.WeChatService;
 import com.xujie.mysecret.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.beans.Transient;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
-package com.xujie.mysecret.entity.message;
+package com.xujie.mysecret.entity.wechat.message;
 
-import com.xujie.mysecret.entity.Music;
+import com.xujie.mysecret.entity.wechat.Music;
 import lombok.Data;
 
 @Data

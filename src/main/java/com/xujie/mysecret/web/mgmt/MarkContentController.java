@@ -1,6 +1,6 @@
 package com.xujie.mysecret.web.mgmt;
 
-import com.xujie.mysecret.entity.MarkContent;
+import com.xujie.mysecret.entity.mark.MarkContent;
 import com.xujie.mysecret.service.MarkContentService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,6 +1,6 @@
-package com.xujie.mysecret.entity.message;
+package com.xujie.mysecret.entity.wechat.message;
 
-import com.xujie.mysecret.entity.Article;
+import com.xujie.mysecret.entity.wechat.Article;
 import lombok.Data;
 
 import java.util.List;

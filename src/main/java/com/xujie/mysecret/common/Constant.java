@@ -61,6 +61,19 @@ public class Constant {
     public static final String ACTIONTYPE = "actiontype";
 
     /**
+     * 登录状态码
+     */
+    public static final int SUCCESS = 20000;
+    public static final int ILLEGALTOKEN = 50008;
+    public static final int TOKEN = 50014;
+
+    /**
+     * 配置文件路径
+     */
+    public static final String PROPPATH = "/app.properties";
+
+
+    /**
      * 其他常量
      */
     public static final int ZERO = 0;

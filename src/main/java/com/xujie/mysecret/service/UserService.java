@@ -4,7 +4,9 @@ import com.xujie.mysecret.entity.permission.User;
 
 public interface UserService {
 
-    void findByUsername(String username);
+    String userToken(User user);
 
-    void save(User user);
+    User save(User user);
+
+    String userInfo(String token);
 }

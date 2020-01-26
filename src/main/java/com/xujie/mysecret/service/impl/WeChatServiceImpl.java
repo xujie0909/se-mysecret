@@ -5,8 +5,8 @@ import com.xujie.mysecret.cache.CacheContent;
 import com.xujie.mysecret.dao.TraceDao;
 import com.xujie.mysecret.entity.mark.LocationDTO;
 import com.xujie.mysecret.entity.mark.Trace;
+import com.xujie.mysecret.entity.response.Response;
 import com.xujie.mysecret.entity.wechat.WeixinMessageInfo;
-import com.xujie.mysecret.entity.WxResponse;
 import com.xujie.mysecret.entity.wechat.message.TextMessage;
 import com.xujie.mysecret.service.WeChatService;
 import com.xujie.mysecret.utils.*;
@@ -222,9 +222,9 @@ public class WeChatServiceImpl implements WeChatService {
 
     @Override
     @Transactional
-    public WxResponse saveMarkInfo(HttpServletRequest request) {
+    public Response saveMarkInfo(HttpServletRequest request) {
 
-        WxResponse wxResponse = new WxResponse();
+        Response response = new Response();
 
         /*
          * 微信返回的位置报文
@@ -250,9 +250,9 @@ public class WeChatServiceImpl implements WeChatService {
         String actionType = request.getParameter(ACTIONTYPE);
 
         if (StringUtils.isBlank(longitude) || StringUtils.isBlank(latitude)) {
-            wxResponse.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
-            wxResponse.setStatusDes("未获取到经度和维度！");
-            return wxResponse;
+            response.setCode(HttpServletResponse.SC_BAD_REQUEST);
+            response.setMessage("未获取到经度和维度！");
+            return response;
         }
 
         LocationDTO locationDTO = getLocationDes(new LocationDTO(latitude, longitude, speed));
@@ -268,10 +268,10 @@ public class WeChatServiceImpl implements WeChatService {
         Trace saveTrace = traceDao.save(trace);
 
         log.info("存储成功!{}", saveTrace);
-        wxResponse.setStatusCode(HttpServletResponse.SC_OK);
-        wxResponse.setStatusDes("存储成功!");
-        wxResponse.setResResult(locationDTO.getDesc());
-        return wxResponse;
+        response.setCode(HttpServletResponse.SC_OK);
+        response.setMessage("存储成功!");
+        response.setData(locationDTO.getDesc());
+        return response;
     }
 
     @Override

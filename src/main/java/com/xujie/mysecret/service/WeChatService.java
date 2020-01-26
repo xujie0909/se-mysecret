@@ -1,6 +1,6 @@
 package com.xujie.mysecret.service;
 
-import com.xujie.mysecret.entity.WxResponse;
+import com.xujie.mysecret.entity.response.Response;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +32,7 @@ public interface WeChatService {
      * @param request 请求
      * @return 响应
      */
-    WxResponse saveMarkInfo(HttpServletRequest request);
+    Response saveMarkInfo(HttpServletRequest request);
 
     /**
      * 创建自定义菜单

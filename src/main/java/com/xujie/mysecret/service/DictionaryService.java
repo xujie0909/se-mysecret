@@ -8,11 +8,10 @@ public interface DictionaryService {
 
     Dictionary save(Dictionary dictionary);
 
-    void delete(Dictionary dictionary);
+    void delete(Long id);
 
-    void update(Dictionary dictionary);
+    Dictionary update(Dictionary dictionary);
 
     List<Dictionary> findAll();
-
 
 }

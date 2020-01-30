@@ -12,12 +12,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class StartUpAndShutDown implements CommandLineRunner {
 
-    private final CacheManager cacheManager;
 
     private final WeChatServiceImpl weChatService;
 
-    public StartUpAndShutDown(CacheManager cacheManager, WeChatServiceImpl weChatService) {
-        this.cacheManager = cacheManager;
+    public StartUpAndShutDown( WeChatServiceImpl weChatService) {
         this.weChatService = weChatService;
     }
 
@@ -26,8 +24,10 @@ public class StartUpAndShutDown implements CommandLineRunner {
     public void run(String... args) {
 
         //加载缓存
-        cacheManager.buildCache();
+        CacheManager.buildCache();
+
         log.info("缓存加载成功！");
+
 
         //加载微信菜单
         Integer errCode = weChatService.createMenu();

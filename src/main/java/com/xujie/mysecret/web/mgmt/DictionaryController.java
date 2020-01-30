@@ -67,4 +67,15 @@ public class DictionaryController {
         response.setMessage("删除成功");
         return response;
     }
+
+    @RequestMapping(value = "/dicTypes",method = RequestMethod.GET)
+    @CrossOrigin
+    public Response getDicTypes(){
+        List<String> dicTypes = this.dictionaryService.getDicTypes();
+        Response response = new Response();
+        response.setCode(Constant.SUCCESS);
+        response.setData(dicTypes);
+        response.setMessage("查询成功！");
+        return response;
+    }
 }

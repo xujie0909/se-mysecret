@@ -14,4 +14,6 @@ public interface DictionaryService {
 
     List<Dictionary> findAll();
 
+    List<String> getDicTypes();
+
 }

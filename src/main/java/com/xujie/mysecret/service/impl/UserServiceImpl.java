@@ -1,8 +1,7 @@
 package com.xujie.mysecret.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.xujie.mysecret.cache.CacheContent;
-import com.xujie.mysecret.cache.CacheManager;
+import com.xujie.mysecret.cache.WechatCacheContent;
 import com.xujie.mysecret.dao.UserDao;
 import com.xujie.mysecret.entity.permission.User;
 import com.xujie.mysecret.service.UserService;
@@ -19,9 +18,9 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
 
-    private final CacheContent cache;
+    private final WechatCacheContent cache;
 
-    public UserServiceImpl(UserDao userDao,CacheContent cache) {
+    public UserServiceImpl(UserDao userDao, WechatCacheContent cache) {
         this.userDao = userDao;
         this.cache = cache;
     }

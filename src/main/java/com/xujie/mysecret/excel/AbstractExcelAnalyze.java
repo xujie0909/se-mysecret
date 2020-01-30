@@ -1,10 +1,13 @@
 package com.xujie.mysecret.excel;
 
-public abstract class  AbstractExcelAnalyze {
+import java.io.InputStream;
+
+public abstract class AbstractExcelAnalyze {
 
     /**
      * 解析excel
+     *
      * @return
      */
-    public abstract boolean analyzeExcel(String fileName);
+    public abstract boolean analyzeExcel(InputStream inputStream);
 }

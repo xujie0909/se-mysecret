@@ -1,6 +1,7 @@
 package com.xujie.mysecret;
 
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.util.ResourceUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author xujie17
  */
 @SpringBootApplication
+@MapperScan("com.xujie.mysecret.dao.mapper")
 public class MysecretApplication extends WebMvcConfigurationSupport {
 
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {

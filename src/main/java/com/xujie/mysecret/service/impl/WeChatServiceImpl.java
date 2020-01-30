@@ -1,7 +1,7 @@
 package com.xujie.mysecret.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xujie.mysecret.cache.CacheContent;
+import com.xujie.mysecret.cache.WechatCacheContent;
 import com.xujie.mysecret.dao.TraceDao;
 import com.xujie.mysecret.entity.mark.LocationDTO;
 import com.xujie.mysecret.entity.mark.Trace;
@@ -31,12 +31,12 @@ import static com.xujie.mysecret.common.Constant.*;
 public class WeChatServiceImpl implements WeChatService {
 
 
-    private final CacheContent cacheContent;
+    private final WechatCacheContent wechatCacheContent;
 
     private final TraceDao traceDao;
 
-    public WeChatServiceImpl(CacheContent cacheContent, TraceDao traceDao) {
-        this.cacheContent = cacheContent;
+    public WeChatServiceImpl(WechatCacheContent wechatCacheContent, TraceDao traceDao) {
+        this.wechatCacheContent = wechatCacheContent;
         this.traceDao = traceDao;
     }
 
@@ -183,7 +183,7 @@ public class WeChatServiceImpl implements WeChatService {
         String ticket;
 
         try {
-            ticket = cacheContent.get(PREFIX + TICKET);
+            ticket = wechatCacheContent.get(PREFIX + TICKET);
         } catch (Exception e) {
             log.error("get accessToken from cache error!", e);
             return null;
@@ -278,7 +278,7 @@ public class WeChatServiceImpl implements WeChatService {
     public Integer createMenu() {
         String accessToken;
         try {
-            accessToken = cacheContent.get(PREFIX + ACCESSTOKEN);
+            accessToken = wechatCacheContent.get(PREFIX + ACCESSTOKEN);
             log.info("从缓存获取的accessToken为:{}", accessToken);
         } catch (Exception e) {
             log.error("get accessToken from cache error!", e);

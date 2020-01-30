@@ -1,5 +1,7 @@
 package com.xujie.mysecret.common;
 
+import java.util.HashMap;
+
 /**
  * @author xujie17
  */
@@ -72,6 +74,10 @@ public class Constant {
      */
     public static final String PROPPATH = "/app.properties";
 
+    /**
+     * 文件类型
+     */
+    public static final String CSV = "csv";
 
     /**
      * 其他常量

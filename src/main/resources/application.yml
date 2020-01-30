@@ -31,3 +31,5 @@ spring:
 logging:
   level:
     root: info
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml

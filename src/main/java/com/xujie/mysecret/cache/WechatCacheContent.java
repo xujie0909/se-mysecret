@@ -11,17 +11,15 @@ import static com.xujie.mysecret.common.Constant.*;
  */
 @Component
 @Slf4j
-public class CacheContent implements ICache<String, String> {
+public class WechatCacheContent {
 
-    @Override
     public void save(String key, String value) {
-        CacheManager.CACHE.put(key, value);
+        CacheManager.WECHATCACHE.put(key, value);
     }
 
-    @Override
     public String get(String key) throws Exception {
 
-        return CacheManager.CACHE.get(key, () -> {
+        return CacheManager.WECHATCACHE.get(key, () -> {
             log.info("key为:{},当前缓存为空，获取数据并缓存...", PREFIX + TICKET);
             if((PREFIX + ACCESSTOKEN).equals(key)){
                 return WechatConfig.getWechatAccessToken();

@@ -80,6 +80,11 @@ public class Constant {
     public static final String CSV = "csv";
 
     /**
+     * 时间格式
+     */
+    public static final String TIMEFORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    /**
      * 其他常量
      */
     public static final int ZERO = 0;

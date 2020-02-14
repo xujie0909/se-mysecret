@@ -1,4 +1,4 @@
-package com.xujie.mysecret.web.mgmt;
+package com.xujie.mysecret.web.system;
 
 import com.xujie.mysecret.common.Constant;
 import com.xujie.mysecret.entity.Dictionary;
@@ -6,7 +6,6 @@ import com.xujie.mysecret.entity.response.Response;
 import com.xujie.mysecret.service.DictionaryService;
 import com.xujie.mysecret.service.impl.DictionaryServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;

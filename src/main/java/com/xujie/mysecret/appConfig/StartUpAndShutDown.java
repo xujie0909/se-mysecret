@@ -1,6 +1,7 @@
 package com.xujie.mysecret.appConfig;
 
-import com.xujie.mysecret.cache.CacheManager;
+import com.xujie.mysecret.cache.CacheBuilders;
+import com.xujie.mysecret.cache.DictionaryCache;
 import com.xujie.mysecret.service.impl.WeChatServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -24,8 +25,7 @@ public class StartUpAndShutDown implements CommandLineRunner {
     public void run(String... args) {
 
         //加载缓存
-        CacheManager.buildCache();
-
+        CacheBuilders.buildCache();
         log.info("缓存加载成功！");
 
 

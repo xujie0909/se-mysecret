@@ -1,4 +1,4 @@
-package com.xujie.mysecret.web.mgmt;
+package com.xujie.mysecret.web.system;
 
 import com.xujie.mysecret.entity.mark.MarkContent;
 import com.xujie.mysecret.service.MarkContentService;

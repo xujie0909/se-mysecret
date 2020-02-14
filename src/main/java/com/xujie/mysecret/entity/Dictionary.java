@@ -3,10 +3,8 @@ package com.xujie.mysecret.entity;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
@@ -39,4 +37,15 @@ public class Dictionary {
      * 字典描述
      */
     private String dicDesc;
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 更新时间
+     */
+    private String updateTime;
+
 }

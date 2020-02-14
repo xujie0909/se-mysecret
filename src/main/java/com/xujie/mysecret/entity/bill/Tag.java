@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Data
 @Entity
@@ -15,7 +16,13 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tname;
+    private String tagName;
+
+    private String billFeild;
+
+    private String keyWord;
 
     private String tid;
+
+    private String date;
 }

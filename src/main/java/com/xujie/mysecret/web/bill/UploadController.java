@@ -1,37 +1,29 @@
-package com.xujie.mysecret.web.mgmt;
+package com.xujie.mysecret.web.bill;
 
-import com.sun.deploy.net.HttpResponse;
 import com.xujie.mysecret.common.Constant;
 import com.xujie.mysecret.entity.response.Response;
 import com.xujie.mysecret.enums.BillTypeEnum;
-import com.xujie.mysecret.excel.AliPayBllAnalyze;
-import com.xujie.mysecret.service.impl.BillServiceImpl;
-import com.xujie.mysecret.utils.CsvReader;
-import com.xujie.mysecret.utils.StringUtil;
+import com.xujie.mysecret.service.bill.impl.BillServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/mgmt")
 @Slf4j
-public class uploadController {
+public class UploadController {
 
     private final BillServiceImpl billService;
 
-    public uploadController(BillServiceImpl billService) {
+    public UploadController(BillServiceImpl billService) {
         this.billService = billService;
     }
 

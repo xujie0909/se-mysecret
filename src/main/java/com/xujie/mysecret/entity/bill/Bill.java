@@ -1,16 +1,17 @@
 package com.xujie.mysecret.entity.bill;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @Entity
+@ToString
 public class Bill {
 
     /**
@@ -107,7 +108,7 @@ public class Bill {
     /**
      * 交易时间
      */
-    private Date date;
+    private String date;
 
     /**
      * 交易类型
@@ -118,6 +119,11 @@ public class Bill {
      * 支付方式
      */
     private String payType;
+
+    /**
+     * 账单来源
+     */
+    private String billSource;
 
     /*enum PayType{
         LINGQIAN(1,"零钱"),
@@ -158,14 +164,16 @@ public class Bill {
      */
     private String status;
 
-    enum statusEnum{
+    public enum statusEnum{
 
-        DONE("1")
+        DONE("1","已处理")
         ;
         private String type;
+        private String desc;
 
-        statusEnum(String type) {
+        statusEnum(String type, String desc) {
             this.type = type;
+            this.desc = desc;
         }
 
         public String getType() {
@@ -174,6 +182,14 @@ public class Bill {
 
         public void setType(String type) {
             this.type = type;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
         }
     }
 

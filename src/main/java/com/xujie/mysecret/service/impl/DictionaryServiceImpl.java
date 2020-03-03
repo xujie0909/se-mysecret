@@ -7,6 +7,7 @@ import com.xujie.mysecret.dao.mapper.DictionaryMapper;
 import com.xujie.mysecret.entity.Dictionary;
 import com.xujie.mysecret.service.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -51,7 +52,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public List<Dictionary> findAll() {
-        return this.dictionaryDao.findAll();
+        return this.dictionaryDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+
     }
 
     @Override

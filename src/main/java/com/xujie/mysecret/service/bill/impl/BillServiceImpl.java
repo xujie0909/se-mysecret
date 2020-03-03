@@ -1,10 +1,12 @@
 package com.xujie.mysecret.service.bill.impl;
 
 import com.xujie.mysecret.cache.DictionaryCache;
+import com.xujie.mysecret.common.Constant;
 import com.xujie.mysecret.dao.BillDao;
 import com.xujie.mysecret.dao.mapper.BillMapper;
 import com.xujie.mysecret.entity.Dictionary;
 import com.xujie.mysecret.entity.bill.Bill;
+import com.xujie.mysecret.enums.BillTypeEnum;
 import com.xujie.mysecret.service.bill.BillService;
 import com.xujie.mysecret.service.bill.TagService;
 import com.xujie.mysecret.utils.CsvReader;
@@ -15,13 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.beans.Encoder;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.xujie.mysecret.common.Constant.TIMEFORMAT;
+import static com.xujie.mysecret.common.Constant.*;
 
 @Service
 @Slf4j
@@ -40,6 +44,54 @@ public class BillServiceImpl implements BillService {
         this.dictionaryCache = dictionaryCache;
     }
 
+    public void analysisBill(HashMap<String, Object> param) {
+
+        //文件流
+        InputStream stream = (InputStream) param.get("stream");
+
+        //账单起始行
+        Integer startRowNum = (Integer)param.get(STARTROWNUM);
+
+        //映射模板
+        Map<String, String> fieldsMapping = (Map<String, String>)param.get(TEMPLATE);
+
+        CsvReader csvReader = new CsvReader("");
+        ArrayList<String[]> rowsData = csvReader.ReadAll(stream, UTF8);
+
+        for (int i = startRowNum; i < rowsData.size(); i++) {
+            String[] row = rowsData.get(i);
+
+            //去除空格
+            for (int j = 0; j < row.length; j++) {
+                row[j] = row[j].trim();
+            }
+
+            //触达最后一行，跳出循环，避免空指针
+            if (StringUtils.isBlank(row[0])) {
+                break;
+            }
+
+            Bill bill = new Bill();
+            bill.setAmount(new BigDecimal(row[Integer.parseInt("amount")]));
+
+            //账单类型通过Bill最后统一处理
+            //bill.setBillType();
+
+            bill.setDate(new SimpleDateFormat(TIMEFORMAT).format(param.get("date")));
+            bill.setStatus(Bill.statusEnum.RECORD.getType());
+            bill.setBillSource((String)param.get("billSource"));
+            bill.setBusinessName(row[(Integer) param.get("businessName")]);
+            bill.setBusinessTransId(row[(Integer) param.get("businessTransId")]);
+            bill.setPayType(row[(Integer) param.get("payType")]);
+            //bill.setProductName(   );
+            //bill.setTransid();
+
+
+
+
+
+        }
+    }
 
     @Override
     public void dealWechatBill(InputStream inputStream) {
@@ -48,22 +100,26 @@ public class BillServiceImpl implements BillService {
         ArrayList<String[]> rowsData = csvReader.ReadAll(inputStream, "UTF8");
         ArrayList<Bill> bills = new ArrayList<>();
 
-        Dictionary dict = dictionaryCache.getDicByTypeAndName("systemConfig", "weChatBillStartRow");
+        Dictionary dict = dictionaryCache.getDictByTypeAndName("systemConfig", "weChatBillStartRow");
         int startRow = Integer.parseInt(dict.getDicValue());
-        log.info("微信起始行为:{}",startRow);
+        log.info("微信起始行为:{}", startRow);
 
         for (int i = startRow; i < rowsData.size(); i++) {
+
             String[] row = rowsData.get(i);
+
             for (int j = 0; j < row.length; j++) {
                 row[j] = row[j].trim();
             }
+
             if (StringUtils.isBlank(row[0])) {
                 break;
             }
+
             Bill bill = new Bill();
-            SimpleDateFormat formater = new SimpleDateFormat(TIMEFORMAT);
+
             try {
-                bill.setDate(String.valueOf(formater.parse(row[0]).getTime()));
+                bill.setDate(String.valueOf(new SimpleDateFormat(TIMEFORMAT).parse(row[0]).getTime()));
             } catch (ParseException e) {
                 log.error("账单日期解析失败！日期:{}", preHandle(row[0]), e);
                 return;
@@ -87,12 +143,14 @@ public class BillServiceImpl implements BillService {
                 log.error("金额解析出错！金额为:{}", row[5]);
                 return;
             }
+
             bill.setPayType(row[6]);
             bill.setTransid(row[8]);
             bill.setBillSource("微信");
             bill.setBusinessTransId(row[9]);
             bill.setStatus("1");
             bill.setTranStatus(row[7]);
+
             bills.add(bill);
         }
 
@@ -107,9 +165,9 @@ public class BillServiceImpl implements BillService {
         CsvReader csvReader = new CsvReader("");
         ArrayList<String[]> rowsData = csvReader.ReadAll(inputStream, "GBK");
 
-        Dictionary dict = dictionaryCache.getDicByTypeAndName("systemConfig", "alipayBillStartRow");
+        Dictionary dict = dictionaryCache.getDictByTypeAndName("systemConfig", "alipayBillStartRow");
         int startRow = Integer.parseInt(dict.getDicValue());
-        log.info("支付宝账单起始行为:{}",startRow);
+        log.info("支付宝账单起始行为:{}", startRow);
         for (int i = startRow; i < rowsData.size(); i++) {
 
             String[] row = rowsData.get(i);
@@ -175,8 +233,8 @@ public class BillServiceImpl implements BillService {
         List<Bill> list = billMapper.findByBill(bill);
 
         for (Bill b : list) {
-            if (b.getStatus().equals(Bill.statusEnum.DONE.getType())) {
-                b.setStatus(Bill.statusEnum.DONE.getDesc());
+            if (b.getStatus().equals(Bill.statusEnum.RECORD.getType())) {
+                b.setStatus(Bill.statusEnum.RECORD.getDesc());
             }
 
             SimpleDateFormat formater = new SimpleDateFormat(TIMEFORMAT);
@@ -199,11 +257,18 @@ public class BillServiceImpl implements BillService {
 
         ArrayList<String> sourceTypeList = new ArrayList<>();
         for (Map<String, Object> map : maps) {
-            sourceTypeList.add((String)map.get("name"));
+            sourceTypeList.add((String) map.get("name"));
         }
         resultMap.put("sourceType", sourceTypeList);
         resultMap.put("typeAndValue", maps);
         return resultMap;
+    }
+
+    @Override
+    public void patch() {
+        List<Bill> allBill = billMapper.findBillOfNotPatch();
+
+
     }
 
     /**
@@ -278,7 +343,4 @@ public class BillServiceImpl implements BillService {
         }
         return data.trim();
     }
-
-    //public void
-
 }

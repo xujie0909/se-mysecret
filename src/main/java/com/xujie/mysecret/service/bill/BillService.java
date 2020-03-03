@@ -27,4 +27,9 @@ public interface BillService {
      * 查询账单来源占比
      */
     HashMap<String,Object> sourceProportion();
+
+    /**
+     * 账单分类匹配标签
+     */
+    void patch();
 }

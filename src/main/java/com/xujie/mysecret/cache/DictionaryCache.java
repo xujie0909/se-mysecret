@@ -54,7 +54,7 @@ public class DictionaryCache {
     }
 
     @SuppressWarnings("all")
-    public Dictionary getDicByTypeAndName(String type,String name){
+    public Dictionary getDictByTypeAndName(String type,String name){
         if(StringUtils.isBlank(type) || StringUtils.isBlank(name)){
             return null;
         }
@@ -68,7 +68,7 @@ public class DictionaryCache {
     }
 
     @SuppressWarnings("all")
-    public Dictionary getDicName(String name){
+    public Dictionary getDicByName(String name){
         if( StringUtils.isBlank(name)){
             return null;
         }
@@ -83,5 +83,14 @@ public class DictionaryCache {
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("all")
+    public List<Dictionary> getDictsByType(String type){
+        if( StringUtils.isBlank(type)){
+            return null;
+        }
+
+        return (List<Dictionary>) CACHE.get(type);
     }
 }

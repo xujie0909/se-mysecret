@@ -25,4 +25,9 @@ public interface BillMapper {
      * @return 数据
      */
     List<Map<String,Object>> sourceProportion();
+
+    /**
+     * 筛选未打标签的账单
+     */
+    List<Bill> findBillOfNotPatch();
 }

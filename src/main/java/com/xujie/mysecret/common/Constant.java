@@ -85,6 +85,19 @@ public class Constant {
     public static final String TIMEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * 账单解析常量
+     */
+    public static final String STARTROWNUM = "startRowNum";
+    public static final String TEMPLATE = "template";
+
+
+
+    /**
+     * 常用编码
+     */
+    public static final String UTF8 = "UTF8";
+
+    /**
      * 其他常量
      */
     public static final int ZERO = 0;

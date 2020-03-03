@@ -3,11 +3,9 @@ package com.xujie.mysecret.entity.bill;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Entity
@@ -125,39 +123,13 @@ public class Bill {
      */
     private String billSource;
 
-    /*enum PayType{
-        LINGQIAN(1,"零钱"),
-        ZHAOSHANGYINHANG(2,"招商银行(9219)")
-        ;
-        private int type;
-        private String name;
-
-        PayType(int type, String name) {
-            this.type = type;
-            this.name = name;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }*/
-
     /**
      * 交易状态
      */
     private String tranStatus;
+
+    @Transient
+    private List<String> tags;
 
     /**
      * 单条账单处理状态
@@ -166,8 +138,9 @@ public class Bill {
 
     public enum statusEnum{
 
-        DONE("1","已处理")
-        ;
+        RECORD("1","已录入"),
+        PATCH("2","已匹配");
+
         private String type;
         private String desc;
 
@@ -192,6 +165,9 @@ public class Bill {
             this.desc = desc;
         }
     }
+
+
+
 
 
 }

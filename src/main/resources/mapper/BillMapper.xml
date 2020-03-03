@@ -18,6 +18,11 @@
         <result column="bill_source" jdbcType="VARCHAR" property="billSource"></result>
     </resultMap>
 
+    <sql id="field">
+        id, amount, bill_type, business_name, business_trans_id, date, pay_type, product_name, status, tran_status,
+         trans_type, transid, bill_source
+    </sql>
+
     <select id="findByBill" parameterType="com.xujie.mysecret.entity.bill.Bill" resultMap="result">
         select * from bill where 1=1
         <if test="null != bill and bill.billSource != null and '' != bill.billSource">
@@ -39,6 +44,10 @@
     
     <select id="sourceProportion" resultType="map">
         select bill_source as 'name',count(1) as 'value' from bill group by bill_source;
+    </select>
+
+    <select id="findBillOfNotPatch">
+        select <include refid="field"></include> from bill where status = 1;
     </select>
 
 </mapper>

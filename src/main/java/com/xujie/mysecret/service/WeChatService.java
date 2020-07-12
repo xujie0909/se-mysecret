@@ -34,12 +34,6 @@ public interface WeChatService {
      */
     Response saveMarkInfo(HttpServletRequest request);
 
-    /**
-     * 创建自定义菜单
-     */
-    Integer createMenu();
-
-
 
 
 }

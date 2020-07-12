@@ -7,16 +7,19 @@ import com.xujie.mysecret.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 @Slf4j
-@RestController
+@Controller
 public class WcBaseController {
 
     private final WeChatServiceImpl weChatService;
@@ -26,6 +29,7 @@ public class WcBaseController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+    @ResponseBody
     public String index(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         log.info("----------------开始处理微信发过来的消息------------------");
@@ -45,6 +49,7 @@ public class WcBaseController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody
     public void connect(HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.info("=======开始验证======");
         //消息来源可靠性验证
@@ -70,4 +75,12 @@ public class WcBaseController {
         }
         out.close();
     }
+
+    @RequestMapping(value = "/wx/signature",method = RequestMethod.POST)
+    @ResponseBody
+    public HashMap<String,String> getSignature(String url){
+        log.info("获取的页面url为:{}",url);
+        return weChatService.getSignature(url);
+    }
+
 }

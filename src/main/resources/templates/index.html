@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
     <link rel="shortcut icon" href="#"/>
-    <title>2.3随便写的标题</title>
+    <title>3.4不能说的秘密</title>
 
     <!--weiUI CSS-->
     <link th:href="@{/css/weui.min.css}" rel="stylesheet" type="text/css"/>
@@ -19,8 +19,8 @@
 <body ontouchstart style="position: fixed;top: 0;left: 0;width: 100%;height: 100% ">
 
 <div>
-    <a id="mark" href="javascript:" style="font-size: 90px" class="weui-btn_cell weui-btn_cell-default"
-       onclick="markTodo('eat')">MARK</a>
+    <a id="mark" style="font-size: 90px" class="weui-btn_cell weui-btn_cell-default"
+       onclick="markTodo()">MARK</a>
 </div>
 
 <div class="weui-tab__panel">
@@ -42,65 +42,96 @@
 
 <script type="text/javascript" th:inline="javascript">
 
+    //页面初始化
     $(function () {
-        init();
+        getSignature();
     });
+
+    var signatureValue, appidValue, timestampValue, noncestrValue;
 
     //初始化配置
     function init() {
-        var signature = [[${signature}]];
-        var appid = [[${appid}]];
-        var timestamp = [[${timestamp}]];
-        var noncestr = [[${noncestr}]];
+        alert("微信配置初始化....");
         //微信配置
         wx.config({
             debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            appId: appid, // 必填，公众号的唯一标识
-            timestamp: timestamp, // 必填，生成签名的时间戳
-            nonceStr: noncestr, // 必填，生成签名的随机串
-            signature: signature,// 必填，签名
+            appId: appidValue, // 必填，公众号的唯一标识
+            timestamp: timestampValue, // 必填，生成签名的时间戳
+            nonceStr: noncestrValue, // 必填，生成签名的随机串
+            signature: signatureValue,// 必填，签名
             jsApiList: ['getLocation', 'openLocation'] // 必填，需要使用的JS接口列表
         });
+
+        wx.error(function (res) {
+            // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+            alert("微信配置失败！")
+        });
+
+
     }
 
-    function markTodo(actionType) {
-        //获取x地理位置
-        wx.ready(function () {
-            alert("验证成功！！开始获取地理位置！");
+    //获取签名
+    function getSignature() {
+        $.ajax({
+            url: '/wx/signature',
+            method: 'POST',
+            async: false,
+            dataType: "json",
+            data: {
+                "url": location.href.split('#')[0]
+            },
+            success: function (res) {
+                alert(JSON.stringify(res));
+                signatureValue = res.signature;
+                appidValue = res.appid;
+                timestampValue = res.timestamp;
+                noncestrValue = res.noncestr
+                init()
+            },
+            error: function (e) {
+                alert(JSON.stringify(e));
+            }
+        })
+    }
+
+    //打卡
+    function markTodo() {
+        wx.ready(function(){
+            // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+            //获取地理位置
             wx.getLocation({
                 type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                 success: function (res) {
-                    alert("获取的位置为>:" + JSON.stringify(res));
-                    transLocationMsg(res,actionType);
+                    transLocationMsg(res);
+                },
+                error: function (e) {
+                    alert(JSON.stringify(e));
                 }
             });
         });
-    }
+    };
 
-    function transLocationMsg(msg,actionType) {
+    //翻译地理位置
+    function transLocationMsg(msg) {
         $.ajax({
             url: '/wx/mark',
             method: 'get',
             async: false,
-            dataType:"json",
+            dataType: "json",
             data: {
                 "latitude": msg.latitude,
                 "longitude": msg.longitude,
                 "speed": msg.speed,
-                "actionType":actionType
+                "actionType": ""
             },
             success: function (res) {
-
+                alert(JSON.stringify(res));
                 var text = $("#locationText");
-
                 text.empty();
-
-                if(res.statusCode === 500){
-                    text.append("<b>响应结果:" + JSON.stringify(res.statusDes) + "</b>");
-                }
-
-                else if(res.statusCode === 200){
-                    text.append("<b>定位位置为:" + JSON.stringify(res.resResult) + "</b>");
+                if (res.code == 500) {
+                    text.append("<h1>响应结果:" + JSON.stringify(res.data) + "</h1>");
+                } else if (res.code == 200) {
+                    text.append("<h1>定位位置为:" + JSON.stringify(res.data) + "</h1>");
                 }
             },
             error: function (e) {
@@ -108,5 +139,6 @@
             }
         })
     }
+
 </script>
 </html>

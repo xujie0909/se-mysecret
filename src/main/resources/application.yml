@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 80
 
 spring:
   datasource:
@@ -27,9 +27,25 @@ spring:
     static-locations: classpath:/static/
   mvc:
     static-path-pattern: /static/**
+  profiles:
+    active: dev
 
 logging:
   level:
     root: info
+  file:
+    path: /var/log/my_secret/my_secret.log
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
+my:
+  secret:
+#    server:
+#      ip: http://164z53n749.iask.in
+    wechat:
+#      appid: wx1ac3362f8a49e7cc
+#      appsecret: 373e5e95e6faaebd824949855b96703a
+      ticketurl: https://api.weixin.qq.com/cgi-bin/ticket/getticket
+      grantType: client_credential
+    location:
+      ip: http://api.cellocation.com:81/regeo/
+

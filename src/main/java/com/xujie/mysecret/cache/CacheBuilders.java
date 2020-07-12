@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 public class CacheBuilders {
 
     public static Cache<String, String> WECHATCACHE;
-    //public static Cache<String, String> DICTIONARYCACHE;
 
     @PreDestroy
     public void destroy() {
@@ -39,16 +38,6 @@ public class CacheBuilders {
                     log.info("微信缓存项被删除,key:{},value为:{},删除原因为:{}", notify.getKey(), notify.getValue(), notify.getCause().name());
                 })
                 .build();
-
-        /*DICTIONARYCACHE = CacheBuilder.newBuilder()
-                .maximumSize(1000)
-                //缓存设置为保存1年
-                .expireAfterWrite(365, TimeUnit.DAYS)
-                //缓存移除监听器
-                .removalListener((RemovalListener<String, String>) notify -> {
-                    log.info("字典缓存项被删除,key:{},value为:{},删除原因为:{}", notify.getKey(), notify.getValue(), notify.getCause().name());
-                })
-                .build();*/
 
         log.info("缓存初始化完毕...");
     }

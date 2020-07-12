@@ -135,16 +135,10 @@
             <version>2.0.1</version>
         </dependency>
 
-        <!--drools规则引擎-->
         <dependency>
-            <groupId>org.drools</groupId>
-            <artifactId>drools-core</artifactId>
-            <version>7.14.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.kie</groupId>
-            <artifactId>kie-spring</artifactId>
-            <version>7.14.0.Final</version>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.3.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

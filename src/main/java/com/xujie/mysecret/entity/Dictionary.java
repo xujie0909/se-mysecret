@@ -6,9 +6,13 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * @author xujie
+ */
 @Data
 @Entity
 @ToString
+@Table(name = "sys_dictionary")
 public class Dictionary {
 
     /**

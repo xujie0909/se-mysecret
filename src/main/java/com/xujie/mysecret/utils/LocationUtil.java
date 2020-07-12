@@ -13,9 +13,9 @@ import static com.xujie.mysecret.common.Constant.*;
  */
 public class LocationUtil {
 
-    public static void getLocationInfo(LocationDTO location) {
+    public static void getLocationInfo(LocationDTO location,String analysislocationip) {
 
-        String result = HttpUtil.doGet(ANALYSISLOCATIONIP, new HashMap<String, String>(3) {{
+        String result = HttpUtil.doGet(analysislocationip, new HashMap<String, String>(3) {{
             put(LAT, location.getLatitude());
             put(LON, location.getLongitude());
             put(OUTPUT, JSONTYPE);

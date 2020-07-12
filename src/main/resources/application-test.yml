@@ -1,0 +1,7 @@
+my:
+  secret:
+    server:
+      ip: http://xujie.vip
+    wechat:
+      appid: wxe67c0112e91aa9a2
+      appsecret: 9c932e6f490f57dc4cef3e7c6035803c

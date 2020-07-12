@@ -1,14 +1,11 @@
 package com.xujie.mysecret.web;
 
-import com.xujie.mysecret.common.Constant;
-import com.xujie.mysecret.service.WeChatService;
 import com.xujie.mysecret.service.impl.WeChatServiceImpl;
-import com.xujie.mysecret.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
-import static com.xujie.mysecret.common.Constant.*;
+import static com.xujie.mysecret.common.Constant.INDEX;
 
 /**
  * @author xujie17
@@ -65,5 +62,12 @@ public class PageController {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    @RequestMapping("test")
+    @ResponseBody
+    public String test(){
+        log.info("请求成功...");
+        return "success";
     }
 }

@@ -1,6 +1,5 @@
 package com.xujie.mysecret.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.xujie.mysecret.cache.WechatCacheContent;
 import com.xujie.mysecret.dao.TraceDao;
 import com.xujie.mysecret.entity.mark.LocationDTO;
@@ -12,6 +11,7 @@ import com.xujie.mysecret.service.WeChatService;
 import com.xujie.mysecret.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +30,14 @@ import static com.xujie.mysecret.common.Constant.*;
 @Service
 public class WeChatServiceImpl implements WeChatService {
 
+    @Value("${my.secret.server.ip}")
+    private String serverDomain;
+
+    @Value("${my.secret.wechat.appid}")
+    private String appid;
+
+    @Value("${my.secret.location.ip}")
+    private String locationIp;
 
     private final WechatCacheContent wechatCacheContent;
 
@@ -83,7 +91,7 @@ public class WeChatServiceImpl implements WeChatService {
 
             // 文本消息
             if (msgType.equals(WeChatMessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-                respContent = "亲，这是文本消息！" + TESTIP + "/page/index";
+                respContent = "亲，这是文本消息！" + serverDomain + "/page/index";
                 textMessage.setContent(respContent);
                 respMessage = WeChatMessageUtil.textMessageToXml(textMessage);
             }
@@ -178,7 +186,7 @@ public class WeChatServiceImpl implements WeChatService {
     public HashMap<String, String> getSignature(String url) {
 
         HashMap<String, String> resultMap = new HashMap<>();
-        resultMap.put(APPIDNAME, APPIDVALUE);
+        resultMap.put(APPID, appid);
 
         String ticket;
 
@@ -196,11 +204,18 @@ public class WeChatServiceImpl implements WeChatService {
         resultMap.put(NONCESTR, randomString);
 
         //时间戳
-        long timestamp = System.currentTimeMillis();
-        resultMap.put(TIMESTAMP, String.valueOf(timestamp));
+        String timestampStr = String.valueOf(System.currentTimeMillis()).substring(0,10);
+        resultMap.put(TIMESTAMP, timestampStr);
 
         String str = JSAPITICKET + "=" + ticket + "&" + NONCESTR + "=" + randomString + "&"
-                + TIMESTAMP + "=" + timestamp + "&" + URL + "=" + TESTIP + "/page/index";
+                + TIMESTAMP + "=" + timestampStr + "&" + URL + "=" + url;
+
+        log.info("finalString:{}",str);
+        log.info("JSAPITICKET:{}",ticket);
+        log.info("NONCESTR:{}",randomString);
+        log.info("TIMESTAMP:{}",timestampStr);
+        log.info("URL:{}",url+"/page/index");
+        log.info("encode:{}",SHA1.encode(str));
 
         resultMap.put(SIGNATURE, SHA1.encode(str));
 
@@ -211,7 +226,7 @@ public class WeChatServiceImpl implements WeChatService {
         //重试两次
         int count = 0;
         while (count < LOCATIONMAXTIME) {
-            LocationUtil.getLocationInfo(locationDTO);
+            LocationUtil.getLocationInfo(locationDTO,locationIp);
             if (StringUtils.isNotBlank(locationDTO.getDesc())) {
                 break;
             }
@@ -256,7 +271,7 @@ public class WeChatServiceImpl implements WeChatService {
         }
 
         LocationDTO locationDTO = getLocationDes(new LocationDTO(latitude, longitude, speed));
-
+        System.out.println(locationDTO);
         Trace trace = new Trace();
         trace.setLatitude(locationDTO.getLatitude());
         trace.setLongitude(locationDTO.getLongitude());
@@ -274,32 +289,5 @@ public class WeChatServiceImpl implements WeChatService {
         return response;
     }
 
-    @Override
-    public Integer createMenu() {
-        String accessToken;
-        try {
-            accessToken = wechatCacheContent.get(PREFIX + ACCESSTOKEN);
-            log.info("从缓存获取的accessToken为:{}", accessToken);
-        } catch (Exception e) {
-            log.error("get accessToken from cache error!", e);
-            return null;
-        }
 
-        //https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN
-
-        String menuConfig = FileUtil.readJsonFile(System.getProperty("user.dir") + "/src/main/resources/config/wxMenu.json");
-        if (menuConfig == null) {
-            log.error("create menu failed!");
-            return null;
-        }
-        String trueMenuConfig = menuConfig.replace(PLACEHOLDER_URL, TESTIP + "/page/index");
-        String result = HttpUtil.doPost(CREATEMENU + accessToken, trueMenuConfig);
-        JSONObject resultObj = JSONObject.parseObject(result);
-        Integer errCode = (Integer) resultObj.get(ERRCODE);
-        log.info("create menu result is:{}", result);
-        if (0 == errCode) {
-            return errCode;
-        }
-        return null;
-    }
 }

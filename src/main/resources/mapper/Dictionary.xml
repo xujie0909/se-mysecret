@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xujie.mysecret.dao.mapper.DictionaryMapper">
-    <select id="findAlldicTypes" resultType="java.lang.String">
-        select distinct dic_type from dictionary;
-    </select>
-</mapper>

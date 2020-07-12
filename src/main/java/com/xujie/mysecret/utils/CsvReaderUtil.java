@@ -3,14 +3,14 @@ package com.xujie.mysecret.utils;
 import java.io.*;
 import java.util.ArrayList;
 
-public class CsvReader {
+public class CsvReaderUtil {
     // 文件路径
     private String filePath;
     private File file;
     private DataInputStream in;
     private BufferedReader br;
 
-    public CsvReader(String filepath) {
+    public CsvReaderUtil(String filepath) {
         this.filePath = filepath;
     }
 
